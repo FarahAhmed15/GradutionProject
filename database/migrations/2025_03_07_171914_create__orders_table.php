@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('Admin', function (Blueprint $table) {
-            $table->id('Admin_id');
-            $table->string('name');
-            $table->string('email');
-            $table->string('password');
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+            $table->date('required_date');
+            $table->timestamp('order_date');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->timestamps();
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('Admin');
+        Schema::dropIfExists('Order');
     }
 };
