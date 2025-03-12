@@ -21,6 +21,10 @@
             <label for="category_name" class="form-label">Category Name</label>
             <input type="text" class="form-control" id="category_name" name="category_name" required>
         </div>
+        <div class="mb-3">
+            <label for="category_name" class="form-label">Category Description</label>
+            <input type="text" class="form-control" id="description" name="description" required>
+        </div>
         <button type="submit" class="btn btn-success">Add Category</button>
     </form>
 </div>

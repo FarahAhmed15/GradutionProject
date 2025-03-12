@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('service_type');
             $table->string('description');
+            $table->timestamps();
         });
     }
 

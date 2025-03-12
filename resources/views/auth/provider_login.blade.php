@@ -8,7 +8,7 @@
 </head>
 <body>
   @include('error')
-    <form action="{{ route('login') }}" method="POST">
+    <form action="{{ route('provider.login') }}" method="POST">
       @csrf
         <div class="form-group">
           <label for="exampleInputEmail1">Email address</label>

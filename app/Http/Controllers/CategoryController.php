@@ -25,10 +25,12 @@ class CategoryController extends Controller
     {
         $request->validate([
             'category_name' => 'required|unique:categories,category_name|max:255',
+            'description' => 'required|max:255',
         ]);
 
         Category::create([
             'category_name' => $request->category_name,
+            'description' => $request->description,
         ]);
 
         return redirect()->route('categories.index')->with('success', 'Category added successfully!');

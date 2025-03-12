@@ -3,10 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class ServiceProvider extends Model
+
+class ServiceProvider extends Authenticatable
 {
-    protected $fillable = ['name', 'email', 'password', 'category_id', 'admin_id'];
+    use Notifiable;
+    protected $fillable = ['name', 'email', 'password', 'experience_years' ,'category_id', 'admin_id'];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
     public function category(){
         return $this->belongsTo(Category::class);

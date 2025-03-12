@@ -16,8 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->foreignId('category_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('admin_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->string('experience_years');
+            $table->foreignId('category_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('admin_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->timestamps();
         });
     }
 
