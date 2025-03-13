@@ -20,29 +20,40 @@ class ServiceProviderAuthController extends Controller
         ]);
         $data['password']=bcrypt($request->password);
         ServiceProvider::create($data);
-        return view('auth.provider_login');
+        return view('auth.provider_login')->with('success', 'Registered successfully. Wait for admin approval.');
     }
+
 
     public function loginform(){
         return view("auth.provider_login");
     }
 
-    public function login(Request $request){
-        $data=$request->validate([
-            "email"=>"required|email|max:200",
-            "password"=>"required|string|min:6",
+    public function login(Request $request) {
+        $data = $request->validate([
+            "email" => "required|email|max:200",
+            "password" => "required|string|min:6",
         ]);
-        
-        $valid=Auth::guard('service_provider')->attempt(["email"=>$request->email,"password"=>$request->password]);
-        if($valid){
-            session()->flash("success","welcome");
-            return view("provider");
 
-        }else{
-            return redirect()->route("provider.loginform")->withErrors(["email" => "Invalid email or password."]);
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::guard('service_provider')->attempt($credentials)) { // Use correct guard
+            $user = Auth::guard('service_provider')->user(); // Fetch the authenticated user
+
+            if (!$user->is_approved) {
+                Auth::guard('service_provider')->logout();
+                return redirect()->route('provider.loginform')->with('error', 'Account not approved yet.');
+            }
+
+            return redirect()->route('provider.dashboard'); // Redirect to the correct dashboard
         }
+
+        return back()->withErrors(['email' => 'Invalid credentials.']);
     }
 
+
+    public function dashboard() {
+        return view('service_provider.dashboard');
+    }
     public function logout(){
         Auth::guard('service_provider')->logout();
         return redirect()->route('provider.loginform');

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('experience_years');
             $table->foreignId('category_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('admin_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->boolean('is_approved')->default(false);
             $table->timestamps();
         });
     }

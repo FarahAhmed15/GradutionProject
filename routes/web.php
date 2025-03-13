@@ -6,6 +6,7 @@ use App\Http\Controllers\UserAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -54,10 +55,13 @@ Route::controller(AdminAuthController::class)->group(function(){
 
     Route::post('admin/logout','logout')->name('admin.logout');
 
-    Route::middleware(['auth.admin'])->group(function () {
+
     Route::get('admin/dashboard', function () {
-        return view('admin');
+        return view('admin.dashboard');
     })->name('admin.dashboard');
+    Route::get('/admin/service-providers', [AdminAuthController::class, 'manageProviders'])->name('admin.service-providers');
+    Route::post('/admin/approve/{id}', [AdminAuthController::class, 'approveProvider'])->name('admin.approve');
+    Route::post('/admin/reject/{id}', [AdminAuthController::class, 'rejectProvider'])->name('admin.reject');
     });
-});
+
 // Route::resource('categories', CategoryController::class);

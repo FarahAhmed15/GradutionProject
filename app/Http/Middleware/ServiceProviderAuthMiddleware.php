@@ -14,11 +14,14 @@ class ServiceProviderAuthMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
-    {
-        if (!Auth::guard('service_provider')->check()) {
-            return redirect()->route('provider.loginform');
+        public function handle(Request $request, Closure $next): Response {
+            $user = Auth::guard('service_provider')->user(); // Store the user
+
+            if (!$user || !$user->is_approved) { // Ensure user exists before checking approval
+                Auth::guard('service_provider')->logout();
+                return redirect()->route('provider.loginform')->with('error', 'Your account is pending approval.');
+            }
+
+            return $next($request);
         }
-        return $next($request);
     }
-}
