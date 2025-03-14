@@ -8,10 +8,6 @@ use App\Models\ServiceProvider;
 class AdminAuthController extends Controller
 {
 
-    public function dashboard() {
-        return view('admin.service_providers');
-    }
-
     public function manageProviders() {
         $providers = ServiceProvider::all();
         return view('admin.service_providers', compact('providers'));
@@ -25,7 +21,7 @@ class AdminAuthController extends Controller
         }
 
         $provider->is_approved = true;
-        $provider->save(); // Save the changes
+        $provider->save();
 
         return redirect()->back()->with('success', 'Provider approved.');
     }

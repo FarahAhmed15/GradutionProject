@@ -36,15 +36,15 @@ class ServiceProviderAuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        if (Auth::guard('service_provider')->attempt($credentials)) { // Use correct guard
-            $user = Auth::guard('service_provider')->user(); // Fetch the authenticated user
+        if (Auth::guard('service_provider')->attempt($credentials)) { 
+            $user = Auth::guard('service_provider')->user(); 
 
             if (!$user->is_approved) {
                 Auth::guard('service_provider')->logout();
                 return redirect()->route('provider.loginform')->with('error', 'Account not approved yet.');
             }
 
-            return redirect()->route('provider.dashboard'); // Redirect to the correct dashboard
+            return redirect()->route('provider.dashboard'); 
         }
 
         return back()->withErrors(['email' => 'Invalid credentials.']);

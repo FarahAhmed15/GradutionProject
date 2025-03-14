@@ -59,9 +59,9 @@ Route::controller(AdminAuthController::class)->group(function(){
     Route::get('admin/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
-    Route::get('/admin/service-providers', [AdminAuthController::class, 'manageProviders'])->name('admin.service-providers');
-    Route::post('/admin/approve/{id}', [AdminAuthController::class, 'approveProvider'])->name('admin.approve');
-    Route::post('/admin/reject/{id}', [AdminAuthController::class, 'rejectProvider'])->name('admin.reject');
+    Route::get('/admin/service-providers', 'manageProviders')->name('admin.service-providers');
+    Route::post('/admin/approve/{id}',  'approveProvider')->name('admin.approve');
+    Route::post('/admin/reject/{id}',  'rejectProvider')->name('admin.reject');
     });
 
 // Route::resource('categories', CategoryController::class);
