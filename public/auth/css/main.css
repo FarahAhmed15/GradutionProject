@@ -1,0 +1,71 @@
+h2{
+    color: #4A4A4A; 
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+/* Page background */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #EDF5FF, #FAFAFA); /* Light pastel blue to soft white */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Larger form container */
+.custom-form {
+    background: linear-gradient(to right, #EFF6FF, #FDFBFB); /* Soft blue to white gradient */
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.08);
+    max-width: 500px;
+    width: 90%;
+}
+
+/* Enlarged input fields */
+.custom-input {
+    font-size: 1.2rem;
+    padding: 1rem;
+    border: 1px solid #D6E2F3;
+    border-radius: 8px;
+    background: #F8FBFF;
+}
+
+/* Updated button color - Blue gradient */
+.custom-login-button , .submit_btn{
+    background: linear-gradient(to right, #4E89C5, #3A6EA5); 
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.2s ease-in-out;
+}
+
+.custom-login-button:hover , .submit_btn{
+    background: linear-gradient(to right, #3D78B3, #2E5A8C);
+    transform: scale(1.05);
+}
+
+.google-button-margin {
+    font-size: 1.1rem;
+    padding: 1rem;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: #4A4A4A;
+}
+
+.form-label i {
+    font-size: 1.2rem;
+    color: #799AC1;
+}
+
