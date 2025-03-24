@@ -13,7 +13,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         return;
     }
 
-  
+
     const passwordError = validatePassword(password);
     if (passwordError) {
         document.getElementById('passwordError').textContent = passwordError;
