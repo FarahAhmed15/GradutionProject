@@ -11,7 +11,7 @@ document.getElementById('registerForm').addEventListener('submit', function(even
     document.getElementById('passwordError').textContent = '';
     document.getElementById('confirmPasswordError').textContent = '';
 
-   
+
     if (name.trim() === '') {
         document.getElementById('nameError').textContent = 'Name is required.';
         return;
