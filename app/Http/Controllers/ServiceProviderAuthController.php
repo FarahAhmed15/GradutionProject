@@ -2,26 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Service;
 use App\Models\ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ServiceProviderAuthController extends Controller
 {
-    public function registerform(){
-        return view("auth.provider_register");
+
+public function registerform() {
+    $categories = Category::with('services')->get();
+    return view("auth.provider_register", compact('categories'));
+}
+
+public function register(Request $request) {
+    $data = $request->validate([
+        "name" => "required|string|max:200",
+        "email" => "required|email|max:200|unique:service_providers,email",
+        "password" => "required|string|min:6|confirmed",
+        "experience_years" => "required|string",
+        "category_id" => "required|exists:categories,id",
+        "services" => "required|array",
+        "services.*" => "exists:services,id",
+        "prices" => "required|array",
+        "prices.*" => "numeric|min:50|max:1000",
+    ]);
+
+    $data['password'] = bcrypt($request->password);
+    $provider = ServiceProvider::create($data);
+
+    $syncData = [];
+    foreach ($request->services as $index => $serviceId) {
+        $syncData[$serviceId] = ['price' => $request->prices[$index]];
     }
-    public function register(Request $request){
-        $data=$request->validate([
-            "name"=>"required|string|max:200",
-            "email"=>"required|email|max:200|unique:users,email",
-            "password"=>"required|string|min:6|confirmed",
-            'experience_years' => 'required|string',
-        ]);
-        $data['password']=bcrypt($request->password);
-        ServiceProvider::create($data);
-        return view('auth.provider_login')->with('success', 'Registered successfully. Wait for admin approval.');
-    }
+    $provider->services()->sync($syncData);
+
+    return redirect()->route('provider.login')->with('success', 'Registered successfully. Wait for admin approval.');
+}
 
 
     public function loginform(){

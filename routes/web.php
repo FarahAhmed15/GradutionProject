@@ -5,7 +5,8 @@ use App\Http\Controllers\ServiceProviderAuthController;
 use App\Http\Controllers\UserAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
-
+use App\Models\Service;
+use Illuminate\Support\Facades\Request;
 
 Route::get('/', function () {
     return view('welcome');
@@ -57,11 +58,13 @@ Route::controller(AdminAuthController::class)->group(function(){
 
 
     Route::get('admin/dashboard', function () {
-        return view('admin.dashboard');
+        return view('admin.dashboardd');
     })->name('admin.dashboard');
     Route::get('/admin/service-providers', 'manageProviders')->name('admin.service-providers');
     Route::post('/admin/approve/{id}',  'approveProvider')->name('admin.approve');
     Route::post('/admin/reject/{id}',  'rejectProvider')->name('admin.reject');
     });
+    
+    
 
 // Route::resource('categories', CategoryController::class);

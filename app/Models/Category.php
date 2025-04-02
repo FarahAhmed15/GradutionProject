@@ -14,4 +14,8 @@ class Category extends Model
     public function admin(){
         return $this->belongsTo(Admin::class);
     }
+    public function services()
+    {
+        return $this->hasMany(Service::class, 'category_id');
+    }
 }
