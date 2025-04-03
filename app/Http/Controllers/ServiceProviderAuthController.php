@@ -17,27 +17,39 @@ public function registerform() {
 }
 
 public function register(Request $request) {
+    // Validate the request
     $data = $request->validate([
         "name" => "required|string|max:200",
         "email" => "required|email|max:200|unique:service_providers,email",
         "password" => "required|string|min:6|confirmed",
         "experience_years" => "required|string",
         "category_id" => "required|exists:categories,id",
-        "services" => "required|array",
+        "services" => "required|array|min:1",
         "services.*" => "exists:services,id",
-        "prices" => "required|array",
+        "prices" => "required|array|min:1",
         "prices.*" => "numeric|min:50|max:1000",
     ]);
 
+    // Hash password before saving
     $data['password'] = bcrypt($request->password);
-    $provider = ServiceProvider::create($data);
 
+    // Create a new service provider
+    $provider = ServiceProvider::create([
+        "name" => $data['name'],
+        "email" => $data['email'],
+        "password" => $data['password'],
+        "experience_years" => $data['experience_years'],
+        "category_id" => $data['category_id'],
+    ]);
+
+    // Sync services with prices in the pivot table
     $syncData = [];
     foreach ($request->services as $index => $serviceId) {
         $syncData[$serviceId] = ['price' => $request->prices[$index]];
     }
     $provider->services()->sync($syncData);
 
+    // Redirect after successful registration
     return redirect()->route('provider.login')->with('success', 'Registered successfully. Wait for admin approval.');
 }
 
@@ -54,15 +66,15 @@ public function register(Request $request) {
 
         $credentials = $request->only('email', 'password');
 
-        if (Auth::guard('service_provider')->attempt($credentials)) { 
-            $user = Auth::guard('service_provider')->user(); 
+        if (Auth::guard('service_provider')->attempt($credentials)) {
+            $user = Auth::guard('service_provider')->user();
 
             if (!$user->is_approved) {
                 Auth::guard('service_provider')->logout();
                 return redirect()->route('provider.loginform')->with('error', 'Account not approved yet.');
             }
 
-            return redirect()->route('provider.dashboard'); 
+            return redirect()->route('provider.dashboard');
         }
 
         return back()->withErrors(['email' => 'Invalid credentials.']);

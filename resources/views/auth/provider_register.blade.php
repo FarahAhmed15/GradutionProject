@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quick Care</title>
     <link rel="stylesheet" href="{{ asset('service_provider/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('service_provider/css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{ asset('service_provider/css/style.css')}}"> 
+    <link rel="stylesheet" href="{{ asset('service_provider/css/style.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -55,35 +54,85 @@
                     </select>
                 </div>
 
+                <!-- Services and Prices -->
                 <div class="mb-3">
-                    <label for="subservice"><i class="fas fa-cogs"></i> Service</label>
-                    <select class="form-control" id="subservice" name="services[]">
-                        <option value="">Select a subservice</option>
+                    <label for="service"><i class="fas fa-cogs"></i> Select Services</label>
+                    <select class="form-control" id="service" name="service">
+                        <option value="">Select a Service</option>
                     </select>
+                    <button type="button" id="addService" class="btn btn-primary mt-2">Add Service</button>
                 </div>
 
-                <div class="mb-3">
-                    <label for="price"><i class="fas fa-dollar-sign"></i> Price</label>
-                    <input type="number" class="form-control" id="price" name="prices[]" min="50" max="1000" placeholder="Enter price">
-                </div>
+                <div id="selectedServices"></div>
 
                 <div class="text-center">
                     <button type="submit" class="btn btn-success"><i class="fas fa-check-circle"></i> Submit</button>
                 </div>
             </form>
 
-            {{-- تخزين الخدمات الفرعية داخل الصفحة --}}
-            @foreach(\App\Models\Category::all() as $category)
-                <div class="subservice-options d-none" data-category="{{ $category->id }}">
+            {{-- Store services in hidden divs (Grouped by category) --}}
+            @foreach(\App\Models\Category::with('services')->get() as $category)
+                <div class="service-options d-none" data-category="{{ $category->id }}">
                     @foreach($category->services as $service)
                         <option value="{{ $service->id }}">{{ $service->service_type }}</option>
                     @endforeach
                 </div>
             @endforeach
+
         </section>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('service_provider/js/main.js') }}"></script>
+    <script>
+        document.getElementById("category_id").addEventListener("change", function() {
+            let categoryId = this.value;
+            let serviceDropdown = document.getElementById("service");
+
+            // Clear previous options
+            serviceDropdown.innerHTML = '<option value="">Select a Service</option>';
+
+            if (categoryId) {
+                let serviceOptions = document.querySelector(`.service-options[data-category='${categoryId}']`);
+                if (serviceOptions) {
+                    serviceDropdown.innerHTML += serviceOptions.innerHTML;
+                }
+            }
+        });
+
+        document.getElementById("addService").addEventListener("click", function() {
+            let serviceDropdown = document.getElementById("service");
+            let selectedService = serviceDropdown.options[serviceDropdown.selectedIndex];
+
+            if (selectedService.value === "") {
+                alert("Please select a service before adding.");
+                return;
+            }
+
+            let selectedServicesDiv = document.getElementById("selectedServices");
+
+            // Check if service is already added
+            if (document.querySelector(`input[name='services[]'][value='${selectedService.value}']`)) {
+                alert("This service is already added.");
+                return;
+            }
+
+            let serviceWrapper = document.createElement("div");
+            serviceWrapper.classList.add("service-entry", "mb-2");
+
+            serviceWrapper.innerHTML = `
+                <input type="hidden" name="services[]" value="${selectedService.value}">
+                <label>${selectedService.text}</label>
+                <input type="number" class="form-control d-inline-block w-50" name="prices[]" min="50" max="1000" placeholder="Enter price" required>
+                <button type="button" class="btn btn-danger btn-sm removeService">Remove</button>
+            `;
+
+            selectedServicesDiv.appendChild(serviceWrapper);
+
+            // Remove service entry when clicking remove button
+            serviceWrapper.querySelector(".removeService").addEventListener("click", function() {
+                serviceWrapper.remove();
+            });
+        });
+    </script>
 </body>
 </html>
